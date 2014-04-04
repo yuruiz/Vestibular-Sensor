@@ -14,13 +14,13 @@ static void Delay(unsigned int n)
 
     for (i = 0; i < n ; i++)
     {
-        _NOP();
+//        _NOP();
     }
 }
 
 void InitIIC(void)
 {
-    IIC_DIR |= IIC_SCL;  //set scl as output
+    I2C_DIR |= I2C_SCL;  //set scl as output
     SDA_OUT; //set SDA as input
     SCL_1;
     Delay(5);
@@ -80,7 +80,7 @@ void Acknowledge(void)
 {
     SCL_0;
     Delay(5);
-    DIR_OUT;
+    SDA_OUT;
     SDA_0;
     SCL_1;
     Delay(5);
@@ -91,7 +91,7 @@ void WriteByte(unsigned char WriteData)
 {
     unsigned char i;
 
-    SDA_OUT
+    SDA_OUT;
 
     for (i = 0; i < 8; i++)
     {
@@ -133,7 +133,7 @@ unsigned char ReadByte(void)
         Delay(5);
         SCL_1;
         Delay(5);
-        DIR_IN;
+        SDA_IN;
 
         if (READ_SDA == 0x01 /*sda==1*/)
         {
@@ -144,7 +144,7 @@ unsigned char ReadByte(void)
             TempBit = 0;
         }
 
-        DIR_OUT;
+        SDA_OUT;
         TempData = (TempData << 1) | TempBit;
         SCL_0;
     }
@@ -181,7 +181,7 @@ void ReadWords(unsigned char unit/*address*/)
     unsigned char i;
     unsigned char HighData = 0;
     unsigned char LowData  = 0;
-    unsigned int  TempData = 0;
+//    unsigned int  TempData = 0;
     Start();
     WriteByte(0xa0);
     ReceiveAck();

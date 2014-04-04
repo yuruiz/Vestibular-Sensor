@@ -19,22 +19,12 @@
 #define READ_SDA ((P3IN >> 3) & 0x01)        //Read SDA
 
 
-void InitIIC();
+void InitIIC(void)
 
-void Start();
+void Start(void)
 
-void Stop();
-
-void Ack();
-
-void NoAck();
-
-unsigned char TestAck();
-
-void Write8Bit(unsigned char input);
-
-unsigned char Read8Bit();
-
-void delay(unsigned int n);
+unsigned int ReadWord(unsigned char unit/*address*/)
+void ReadWords(unsigned char unit/*address*/)
+void WriteWord(unsigned char unit/*address*/, unsigned int WriteData)
 
 #endif
