@@ -1,3 +1,5 @@
+#include "io430.h"
+
 #ifndef I2C_H
 #define I2C_H
 
@@ -24,7 +26,9 @@ void InitIIC(void)
 void Start(void)
 
 unsigned int ReadWord(unsigned char unit/*address*/)
-void ReadWords(unsigned char unit/*address*/)
-void WriteWord(unsigned char unit/*address*/, unsigned int WriteData)
+
+void ReadWords(unsigned char DEVICE_ID, unsigned char data/*address*/,  unsigned char Buffer, unsigned int length)
+
+void WriteWord(unsigned char DEVICE_ID, unsigned char unit/*address*/, unsigned int WriteData)
 
 #endif
