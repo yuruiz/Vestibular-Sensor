@@ -3,7 +3,7 @@
 #include "i2c.h"
 //P3.3  SCL
 //P3.1  SDA
-
+#define TestACK if(ReceiveAck()){return 1;}
 
 
 unsigned int a[50];
@@ -74,11 +74,6 @@ unsigned char ReceiveAck(void)
     Delay(5);
     SDA_IN;
     Delay(5);
-    // while ((READ_SDA == 0x01 /*sda==1*/) && (i < 255)/*调试方便,可以不要*/)
-    // {
-    //     i++;
-    // }
-
     ack = READ_SDA;
     SDA_OUT;
     SCL_0;
@@ -130,7 +125,7 @@ void WriteByte(unsigned char WriteData)
     Delay(5);
 }
 
-unsigned char ReadByte(void)
+unsigned char Read8bit(void)
 {
 
     unsigned char TempBit  = 0;
@@ -164,7 +159,7 @@ unsigned char ReadByte(void)
     return (TempData);
 }
 
-unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address/*address*/)
+unsigned char ReadByte(unsigned char DEVICE_ID, unsigned char Address)
 {
     unsigned char data = 0;
 
@@ -174,22 +169,19 @@ unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address/*address*
     Start();
     WriteByte(wirte_addr);
 
-    if (ReceiveAck())
-    {return data;}
+    TestACK
 
     WriteByte(Address);
 
-    if (ReceiveAck())
-    {return data;}
+    TestACK
 
     Start();
 
     WriteByte(read_addr);
 
-    if (ReceiveAck())
-    {return data;}
+    TestACK
 
-    data  = ReadByte();
+    data  = Read8bit();
 
     NoAck();
     Stop();
@@ -197,76 +189,65 @@ unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address/*address*
     return (data);
 }
 
-unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address/*address*/)
+unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address)
 {
     unsigned char HighData = 0;
     unsigned char LowData  = 0;
     unsigned int  TempData = 0;
 
-    unsigned char read_addr = (DEVICE_ID << 1) | BIT1;
-    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT1);
+    unsigned char read_addr = (DEVICE_ID << 1) | BIT0;
+    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT0);
 
     Start();
     WriteByte(wirte_addr);
-    ReceiveAck();
+    TestACK
     WriteByte(Address);
-    ReceiveAck();
+    TestACK
     Start();
     WriteByte(read_addr);
-    if (ReceiveAck())
-    {
-      LowData  = ReadByte();
-      Acknowledge();
-      HighData = ReadByte();
-      Stop();
-      TempData = (HighData << 8) + LowData;
-      Delay(1000);
-      return (TempData);
-    }
-    return 0;
-
+    TestACK
+    LowData  = Read8bit();
+    Acknowledge();
+    HighData = Read8bit();
+    NoAck();
+    Stop();
+    TempData = (HighData << 8) + LowData;
+    return (TempData);
 
 }
 
-void ReadWords(unsigned char DEVICE_ID, unsigned char data/*address*/,  unsigned char *Buffer, unsigned int length)
+void ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length)
 {
 
     unsigned char HighData = 0;
     unsigned char LowData  = 0;
 //    unsigned int  TempData = 0;
 
-    unsigned char read_addr = (DEVICE_ID << 1) | BIT1;
-    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT1);
+    unsigned char read_addr = (DEVICE_ID << 1) | BIT0;
+    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT0);
 
 
     Start();
     WriteByte(wirte_addr);
-    ReceiveAck();
-    WriteByte(data);
-    ReceiveAck();
+    TestACK
+    WriteByte(Address);
+    TestACK
     Start();
     WriteByte(read_addr);
-    ReceiveAck();
+    TestACK
 
     unsigned int i;
-    for (i = 0; i < length - 2; i++)
+    for (i = 0; i < length; i++)
     {
-        LowData  = ReadByte();
+        Buffer[i] = Read8bit();
         Acknowledge();
-        HighData = ReadByte();
-        Acknowledge();
-        Buffer[i] = (HighData << 8) + LowData;
     }
-
-    LowData  = ReadByte();
-    Acknowledge();
-    HighData = ReadByte();
+    NoAck();
     Stop();
-    Buffer[length -1 ] = (HighData << 8) + LowData;
     Delay(1000);
 }
 
-void WriteWord(unsigned char DEVICE_ID, unsigned char unit/*address*/, unsigned int WriteData)
+void WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData)
 {
     unsigned char LowData  = 0;
     unsigned char HighData = 0;
@@ -276,13 +257,13 @@ void WriteWord(unsigned char DEVICE_ID, unsigned char unit/*address*/, unsigned 
     HighData = (unsigned char)(WriteData >> 8);
     Start();
     WriteByte(wirte_addr);
-    ReceiveAck();
-    WriteByte(unit);
-    ReceiveAck();
+    TestACK
+    WriteByte(Address);
+    TestACK
     WriteByte(LowData);
-    ReceiveAck();
+    TestACK
     WriteByte(HighData);
-    ReceiveAck();
+    TestACK
     Stop();
     Delay(2000);
 }

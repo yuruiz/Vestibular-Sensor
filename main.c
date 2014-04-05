@@ -63,7 +63,7 @@ void main(void)
     P1DIR |= 0x03;                        // Set P1.0 to output direction
 
     //    IIC_Start();
-    unsigned char ID = ReadBytes(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_WHO_AM_I);
+    unsigned char ID = ReadByte(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_WHO_AM_I);
 
     ID = ID >> 1;
     //    printf("123");

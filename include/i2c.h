@@ -23,11 +23,11 @@
 
 void InitIIC(void);
 
-unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address/*address*/);
+unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address);
 
-void ReadWords(unsigned char DEVICE_ID, unsigned char data/*address*/,  unsigned char *Buffer, unsigned int length);
+void ReadWords(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length);
 
-void WriteWord(unsigned char DEVICE_ID, unsigned char unit/*address*/, unsigned int WriteData);
+void WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData);
 
-unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address/*address*/);
+unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address);
 #endif
