@@ -189,6 +189,39 @@ unsigned char ReadByte(unsigned char DEVICE_ID, unsigned char Address)
     return (data);
 }
 
+unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length)
+{
+
+//    unsigned char HighData = 0;
+//    unsigned char LowData  = 0;
+//    unsigned int  TempData = 0;
+
+    unsigned char read_addr = (DEVICE_ID << 1) | BIT0;
+    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT0);
+
+
+    Start();
+    WriteByte(wirte_addr);
+    TestACK
+    WriteByte(Address);
+    TestACK
+    Start();
+    WriteByte(read_addr);
+    TestACK
+
+    unsigned int i;
+    for (i = 0; i < length; i++)
+    {
+        Buffer[i] = Read8bit();
+        Acknowledge();
+    }
+    NoAck();
+    Stop();
+    Delay(1000);
+    
+    return 0;
+}
+
 unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address)
 {
     unsigned char HighData = 0;
@@ -216,38 +249,9 @@ unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address)
 
 }
 
-void ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length)
-{
-
-    unsigned char HighData = 0;
-    unsigned char LowData  = 0;
-//    unsigned int  TempData = 0;
-
-    unsigned char read_addr = (DEVICE_ID << 1) | BIT0;
-    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT0);
 
 
-    Start();
-    WriteByte(wirte_addr);
-    TestACK
-    WriteByte(Address);
-    TestACK
-    Start();
-    WriteByte(read_addr);
-    TestACK
-
-    unsigned int i;
-    for (i = 0; i < length; i++)
-    {
-        Buffer[i] = Read8bit();
-        Acknowledge();
-    }
-    NoAck();
-    Stop();
-    Delay(1000);
-}
-
-void WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData)
+unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData)
 {
     unsigned char LowData  = 0;
     unsigned char HighData = 0;

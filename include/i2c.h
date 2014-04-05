@@ -25,9 +25,9 @@ void InitIIC(void);
 
 unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address);
 
-void ReadWords(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length);
+unsigned char ReadByte(unsigned char DEVICE_ID, unsigned char Address);
 
-void WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData);
+unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length);
 
-unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address);
+unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData);
 #endif
