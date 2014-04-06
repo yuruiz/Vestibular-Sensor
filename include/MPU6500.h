@@ -397,4 +397,8 @@ THE SOFTWARE.
 
 // note: DMP code memory blocks defined at end of header file
 
+unsigned char MPU6500_Init();
+
+unsigned char MPU_Test_Connection();
+
 #endif /* _MPU6500_H_ */

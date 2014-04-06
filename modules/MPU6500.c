@@ -22,7 +22,13 @@ unsigned char MPU6500_Init()
     return 0;
 }
 
-unsigned char Test_Connection()
+unsigned char MPU_Test_Connection()
 {
+	unsigned char ID = ReadByte(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_WHO_AM_I);
+
+	if (ID == 0x70)
+	{
+		return 1
+	}
     return 0;
 }
