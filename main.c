@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "i2c.h"
 #include "MPU6500.h"
+#include "uart.h"
 
 #pragma vector=USART0RX_VECTOR
 __interrupt void UartRx()
@@ -32,23 +33,23 @@ static void Delay(unsigned int n)
 //System Initialization
 void InitSys()
 {
-        unsigned int iq0;
-    
         //use XT2 Oscillator
-        BCSCTL1 &= ~XT2OFF; //open XT2 Oscillator
-    
-        do
-        {
-            IFG1 &= ~OFIFG; //clear Oscillator flags
-    
-            for (iq0 = 0xFF; iq0 > 0; iq0--); //delay, wait Oscillator to work
-        }
-        while ((IFG1 & OFIFG) != 0); //test if XT2 works
+        // BCSCTL1 &= ~XT2OFF; //open XT2 Oscillator
 
-        BCSCTL2 = SELM_2 + SELS; //select XT2 for MCLK¡¢SMCLK
+        // do
+        // {
+        //     IFG1 &= ~OFIFG; //clear Oscillator flags
+
+        //     unsigned int iq0;
+        //     for (iq0 = 0xFF; iq0 > 0; iq0--); //delay, wait Oscillator to work
+        // }
+        // while ((IFG1 & OFIFG) != 0); //test if XT2 works
+
+        // BCSCTL2 = SELM_2 + SELS; //select XT2 for MCLKÂ¡Â¢SMCLK
 
     //Other peripheral initialization
     InitIIC();
+    UartInit();
     //  _EINT(); //Open global interrupt control
 }
 
@@ -71,7 +72,7 @@ void main(void)
 
     for (;;)
     {
-        volatile unsigned int i;            // volatile to prevent optimization
+        SendUart("123456", 6);
 
         P1OUT ^= 0x03;                      // Toggle P1.0 using exclusive-OR
         //    printf("hello world\n");

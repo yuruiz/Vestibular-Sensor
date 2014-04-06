@@ -4,8 +4,8 @@
 void UartInit()
 {
     USART_SEL |= UTXD0 + URXD0;     //set the pinout as secondary functin
-    UCTL0 = CHAR + PENA + SWRST;    //8 data bits , 1 stop bit , 1 parity bit
-    UTCTL0 = SSEL0;     //setlect UCLK = ACLK
+    UCTL0 = CHAR;    //8 data bits , 1 stop bit , 1 parity bit
+    UTCTL0 |= SSEL0;     //setlect UCLK = ACLK
     UBR00 = 0x3;        //set the baud rate 9600 bit/s
     UBR10 = 0;
     UMCTL0 = 0x4A;
@@ -20,8 +20,10 @@ void SendUart(unsigned char *pBuffer, unsigned char n_byte)
 
     for (q0 = 0; q0 < n_byte; q0++)
     {
-        while ((IFG1 & UTXIFG0) == 0); //check if the sending finished TXBUF0=*pBuffer;
+        while ((IFG1 & UTXIFG0) == 0); //check if the sending finished
 
-        pBuffer++;
+        TXBUF0 = pBuffer[q0];
+
+        // pBuffer++;
     }
 }
