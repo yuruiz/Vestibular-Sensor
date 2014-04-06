@@ -218,7 +218,7 @@ unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigne
     NoAck();
     Stop();
     Delay(1000);
-    
+
     return 0;
 }
 
@@ -248,8 +248,55 @@ unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address)
     return (TempData);
 
 }
+bool writeBit(unsigned char devAddr, unsigned char regAddr, unsigned char bitNum, unsigned char data)
+{
+    unsigned char status;
+    status = readByte(devAddr, regAddr);
+    status = (data != 0) ? (status | (1 << bitNum)) : (b & ~(1 << bitNum));
+    return writeByte(devAddr, regAddr, status);
+}
 
+bool writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitStart, unsigned char length, unsigned char data)
+{
+    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT1);
 
+    status = ReadByte(devAddr, regAddr);
+    if (status == 1)
+    {
+        return false;
+    }
+
+/*         010 value to write
+    76543210 bit numbers
+       xxx   args: bitStart=4, length=3
+    00011100 mask byte
+    10101111 original value (sample)
+    10100011 original & ~mask
+    10101011 masked | value*/
+
+    unsigned char mask = ((1 << length) - 1) << (bitStart - length + 1);
+    data <<= (bitStart - length + 1); // shift data into correct position
+    data &= mask; // zero all non-important bits in data
+    status &= ~(mask); // zero all important bits in existing byte
+    status |= data; // combine data with existing byte
+    WriteByte(devAddr, regAddr, status);
+    return 0;
+}
+
+unsigned char WriteByte(unsigned char DEVICE_ID, unsigned char Address, unsigned char WriteData)
+{
+    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT1);
+
+    Start();
+    WriteByte(wirte_addr);
+    TestACK
+    WriteByte(Address);
+    TestACK
+    WriteByte(WriteData);
+    TestACK
+    Stop();
+    Delay(2000);
+}
 
 unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData)
 {

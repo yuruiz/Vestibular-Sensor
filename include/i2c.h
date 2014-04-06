@@ -29,5 +29,9 @@ unsigned char ReadByte(unsigned char DEVICE_ID, unsigned char Address);
 
 unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length);
 
+bool writeBit(unsigned char devAddr, unsigned char regAddr, unsigned char bitNum, unsigned char data);
+
+bool writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitStart, unsigned char length, unsigned char data);
+
 unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData);
 #endif
