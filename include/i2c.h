@@ -4,9 +4,9 @@
 #define I2C_H
 
 
-#define I2C_DIR P3DIR
-#define I2C_OUT P3OUT
-#define I2C_IN  P3IN
+#define I2C_DIR P1DIR
+#define I2C_OUT P1OUT
+#define I2C_IN  P1IN
 #define I2C_SCL BIT3
 #define I2C_SDA BIT1
 
@@ -29,9 +29,9 @@ unsigned char ReadByte(unsigned char DEVICE_ID, unsigned char Address);
 
 unsigned char ReadBytes(unsigned char DEVICE_ID, unsigned char Address,  unsigned char *Buffer, unsigned int length);
 
-bool writeBit(unsigned char devAddr, unsigned char regAddr, unsigned char bitNum, unsigned char data);
+unsigned char writeBit(unsigned char devAddr, unsigned char regAddr, unsigned char bitNum, unsigned char data);
 
-bool writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitStart, unsigned char length, unsigned char data);
+unsigned char writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitStart, unsigned char length, unsigned char data);
 
 unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData);
 #endif

@@ -248,22 +248,38 @@ unsigned int ReadWord(unsigned char DEVICE_ID, unsigned char Address)
     return (TempData);
 
 }
-bool writeBit(unsigned char devAddr, unsigned char regAddr, unsigned char bitNum, unsigned char data)
-{
-    unsigned char status;
-    status = readByte(devAddr, regAddr);
-    status = (data != 0) ? (status | (1 << bitNum)) : (b & ~(1 << bitNum));
-    return writeByte(devAddr, regAddr, status);
-}
 
-bool writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitStart, unsigned char length, unsigned char data)
+
+unsigned char writeByte(unsigned char DEVICE_ID, unsigned char Address, unsigned char WriteData)
 {
     unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT1);
 
+    Start();
+    WriteByte(wirte_addr);
+    TestACK
+    WriteByte(Address);
+    TestACK
+    WriteByte(WriteData);
+    TestACK
+    Stop();
+    Delay(2000);
+    return 1;
+}
+
+unsigned char writeBit(unsigned char devAddr, unsigned char regAddr, unsigned char bitNum, unsigned char data)
+{
+    unsigned char status;
     status = ReadByte(devAddr, regAddr);
+    status = (data != 0) ? (status | (1 << bitNum)) : (status & ~(1 << bitNum));
+    return writeByte(devAddr, regAddr, status);
+}
+
+unsigned char writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitStart, unsigned char length, unsigned char data)
+{
+    unsigned char status = ReadByte(devAddr, regAddr);
     if (status == 1)
     {
-        return false;
+        return 1;
     }
 
 /*         010 value to write
@@ -279,23 +295,8 @@ bool writeBits(unsigned char devAddr, unsigned char regAddr, unsigned char bitSt
     data &= mask; // zero all non-important bits in data
     status &= ~(mask); // zero all important bits in existing byte
     status |= data; // combine data with existing byte
-    WriteByte(devAddr, regAddr, status);
+    writeByte(devAddr, regAddr, status);
     return 0;
-}
-
-unsigned char WriteByte(unsigned char DEVICE_ID, unsigned char Address, unsigned char WriteData)
-{
-    unsigned char wirte_addr = (DEVICE_ID << 1) & (~BIT1);
-
-    Start();
-    WriteByte(wirte_addr);
-    TestACK
-    WriteByte(Address);
-    TestACK
-    WriteByte(WriteData);
-    TestACK
-    Stop();
-    Delay(2000);
 }
 
 unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned int WriteData)
@@ -317,4 +318,5 @@ unsigned char WriteWord(unsigned char DEVICE_ID, unsigned char Address, unsigned
     TestACK
     Stop();
     Delay(2000);
+    return 0;
 }

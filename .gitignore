@@ -1,2 +1,10 @@
 ST3/
+Debug/
+examples/
+settings/
+*.eww
+*.dep
+*.ewd
+*.ewp
+path.txt
 .DS_store

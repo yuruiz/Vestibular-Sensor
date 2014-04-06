@@ -32,20 +32,20 @@ static void Delay(unsigned int n)
 //System Initialization
 void InitSys()
 {
-    //    unsigned int iq0;
-    //
-    //    //use XT2 Oscillator
-    //    BCSCTL1 &= ~XT2OFF; //open XT2 Oscillator
-    //
-    //    do
-    //    {
-    //        IFG1 &= ~OFIFG; //clear Oscillator flags
-    //
-    //        for (iq0 = 0xFF; iq0 > 0; iq0--); //delay, wait Oscillator to work
-    //    }
-    //    while ((IFG1 & OFIFG) != 0); //test if XT2 works
+        unsigned int iq0;
+    
+        //use XT2 Oscillator
+        BCSCTL1 &= ~XT2OFF; //open XT2 Oscillator
+    
+        do
+        {
+            IFG1 &= ~OFIFG; //clear Oscillator flags
+    
+            for (iq0 = 0xFF; iq0 > 0; iq0--); //delay, wait Oscillator to work
+        }
+        while ((IFG1 & OFIFG) != 0); //test if XT2 works
 
-    //    BCSCTL2 = SELM_2 + SELS; //select XT2 for MCLK¡¢SMCLK
+        BCSCTL2 = SELM_2 + SELS; //select XT2 for MCLK¡¢SMCLK
 
     //Other peripheral initialization
     InitIIC();
@@ -65,7 +65,7 @@ void main(void)
     //    IIC_Start();
     unsigned char ID = ReadByte(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_WHO_AM_I);
 
-    ID = ID >> 1;
+//    ID = ID >> 1;
     //    printf("123");
     printf("%x\n", ID);
 
