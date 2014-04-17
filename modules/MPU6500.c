@@ -28,7 +28,7 @@ unsigned char MPU_Test_Connection()
 
 	if (ID == 0x70)
 	{
-		return 1
+		return 1;
 	}
     return 0;
 }

@@ -22,8 +22,8 @@ void SendUart(unsigned char *pBuffer, unsigned char n_byte)
     {
         while ((IFG1 & UTXIFG0) == 0); //check if the sending finished
 
-        TXBUF0 = pBuffer[q0];
+        TXBUF0 = *pBuffer;
 
-        // pBuffer++;
+        pBuffer++;
     }
 }
