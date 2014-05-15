@@ -5,7 +5,7 @@
 //P3.1  SDA
 #define TestACK if(ReceiveAck()){return 1;}
 
-
+#define DELAY_CONSTANT 50
 unsigned int a[50];
 
 static void Delay(unsigned int n)
@@ -25,13 +25,13 @@ void Start(void)
     SDA_OUT;
 
     SDA_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SCL_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SDA_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SCL_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
 }
 
 void Stop(void)
@@ -39,30 +39,30 @@ void Stop(void)
     SDA_OUT;
 
     SCL_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SDA_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SCL_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SDA_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
 }
 
 void NoAck(void)
 {
     SDA_OUT;
     SDA_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SCL_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SCL_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
 }
 
 void InitIIC(void)
 {
     I2C_DIR |= I2C_SCL;  //set scl as output
-    SDA_OUT; //set SDA as input
+    SDA_IN; //set SDA as input
     SCL_0;
     Stop();
 }
@@ -71,13 +71,13 @@ unsigned char ReceiveAck(void)
 {
     unsigned char ack = 0;
     SCL_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SDA_IN;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     ack = READ_SDA;
     SDA_OUT;
     SCL_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
 
     return ack;
 }
@@ -85,11 +85,11 @@ unsigned char ReceiveAck(void)
 void Acknowledge(void)
 {
     SCL_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SDA_OUT;
     SDA_0;
     SCL_1;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SCL_0;
 }
 
@@ -110,19 +110,19 @@ void WriteByte(unsigned char WriteData)
             SDA_0;
         }
 
-        Delay(5);
+        Delay(DELAY_CONSTANT);
         SCL_1;
-        Delay(5);
+        Delay(DELAY_CONSTANT);
         SCL_0;
-        Delay(5);
+        Delay(DELAY_CONSTANT);
         WriteData = WriteData << 1;
 
     }
 
     SCL_0;
     SDA_1;
-    Delay(5);
-    Delay(5);
+    Delay(DELAY_CONSTANT);
+    Delay(DELAY_CONSTANT);
 }
 
 unsigned char Read8bit(void)
@@ -131,7 +131,7 @@ unsigned char Read8bit(void)
     unsigned char TempBit  = 0;
     unsigned char TempData = 0;
     SCL_0;
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     SDA_IN;
 
     unsigned char i;
@@ -139,7 +139,7 @@ unsigned char Read8bit(void)
     {
 
         SCL_1;
-        Delay(5);
+        Delay(DELAY_CONSTANT);
         SDA_IN;
         if (READ_SDA == I2C_SDA/*sda==1*/)
         {
@@ -150,12 +150,12 @@ unsigned char Read8bit(void)
             TempBit = 0;
         }
         TempData = (TempData << 1) | TempBit;
-        Delay(5);
+        Delay(DELAY_CONSTANT);
         SCL_0;
-        Delay(5);
+        Delay(DELAY_CONSTANT);
     }
 
-    Delay(5);
+    Delay(DELAY_CONSTANT);
     return (TempData);
 }
 

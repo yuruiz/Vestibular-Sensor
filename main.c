@@ -4,7 +4,7 @@
 #include "i2c.h"
 #include "MPU6500.h"
 #include "uart.h"
-#include "string.h"
+//#include "string.h"
 
 #define STRING_LEN 14
 
