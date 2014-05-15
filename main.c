@@ -4,7 +4,7 @@
 #include "i2c.h"
 #include "MPU6500.h"
 #include "uart.h"
-//#include "string.h"
+#include "string.h"
 
 #define STRING_LEN 14
 
@@ -23,15 +23,15 @@ __interrupt void UartTx ()
     __low_power_mode_off_on_exit();
 }
 
-static void Delay(unsigned int n)
-{
-    unsigned int i;
-
-    for (i = 0; i < n ; i++)
-    {
-        //        _NOP();
-    }
-}
+//static void Delay(unsigned int n)
+//{
+//    unsigned int i;
+//
+//    for (i = 0; i < n ; i++)
+//    {
+//        //        _NOP();
+//    }
+//}
 
 //System Initialization
 void InitSys()
@@ -79,7 +79,7 @@ void main(void)
 
         unsigned char buffer[14];
         
-//        memset(buffer, 0, 14);
+        memset(buffer, 0, 14);
         ReadBytes(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_ACCEL_XOUT_H, buffer, 14);
 
         unsigned int ax = (((unsigned int)buffer[0]) << 8) | buffer[1];
