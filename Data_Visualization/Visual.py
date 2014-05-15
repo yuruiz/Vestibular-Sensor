@@ -1,49 +1,76 @@
-import numpy as np
-import matplotlib.pyplot as plt
+import pylab
+import serial
 
-def get_peaks(x, y, n, x0=None, x1=None):
-    if x0 is None:
-        x0 = x[0]
-    if x1 is None:
-        x1 = x[-1]
-    index0 = np.searchsorted(x, x0)
-    index1 = np.searchsorted(x, x1, side="right")
-    step = (index1 - index0) // n
-    if step == 0:
-        step = 1
-    index1 += 2 * step
-    if index0 < 0:
-        index0 = 0
-    if index1 > len(x) - 1:
-        index1 = len(x) - 1
-    x = x[index0:index1+1]
-    y = y[index0:index1+1]
-    y = y[:len(y)//step*step]
-    yy = y.reshape(-1, step)
-    index = np.c_[np.argmin(yy, axis=1), np.argmax(yy, axis=1)]
-    index.sort(axis=1)
-    index += np.arange(0, len(y), step).reshape(-1, 1)
-    index = index.reshape(-1)
-    return x[index], y[index]
+from pylab import *
 
-def get_sample_data(N):
-    x = np.linspace(-14, 14, N)
-    y = np.sin(x) * x**3 * np.sin(100*x)
-    np.random.seed(1)
-    y[np.random.randint(0, N, 100)] += np.random.randint(100, 300, 100)
-    return x, y
+port = serial.Serial(11, 9600)
 
-x, y = get_sample_data(1000000)
+xAchse=pylab.arange(0,100,1)
+yAchse=pylab.array([0]*100)
 
-ax = plt.subplot(111)
-line, = plt.plot(*get_peaks(x, y, 500))
+fig = pylab.figure(1)
+ax = fig.add_subplot(111)
+ax.grid(True)
+ax.set_title("Realtime Waveform Plot")
+ax.set_xlabel("Time")
+ax.set_ylabel("Amplitude")
+ax.axis([0,100,-20000,20000])
+line1=ax.plot(xAchse,yAchse,'-')
 
-ax = plt.gca()
+manager = pylab.get_current_fig_manager()
 
-def update_data(ax):
-    x0, x1 = ax.get_xlim()
-    line.set_data(*get_peaks(x, y, 500, x0, x1))
-    ax.figure.canvas.draw_idle()
+values=[]
+values = [0 for x in range(100)]
 
-ax.callbacks.connect('xlim_changed', update_data)
-plt.show()
+Ta=0.01
+fa=1.0/Ta
+fcos=3.5
+
+Konstant=cos(2*pi*fcos*Ta)
+T0=1.0
+T1=Konstant
+
+def getSerialData():
+    while 1 > 0:
+          read_line = ''
+          read_char = port.read()
+          if read_char != '\n':
+              read_line += read_char
+          else:
+            if read_line[1:3] == 'ax':
+                try:
+                    return int(line[5:10].strip(' '))
+                except Exception, e:
+                    print e
+            read_line = ''
+
+def SinwaveformGenerator(arg):
+  global values,T1,Konstant,T0
+  ohmegaCos=arccos(T1)/Ta
+  print "fcos=", ohmegaCos/(2*pi), "Hz"
+
+  Tnext=((Konstant*T1)*2)-T0
+  if len(values)%100>70:
+    values.append(random()*2-1)
+  else:
+    values.append(getSerialData())
+  T0=T1
+  T1=Tnext
+
+
+def RealtimePloter(arg):
+  global values
+  CurrentXAxis=pylab.arange(len(values)-100,len(values),1)
+  line1[0].set_data(CurrentXAxis,pylab.array(values[-100:]))
+  ax.axis([CurrentXAxis.min(),CurrentXAxis.max(),-20000,20000])
+  manager.canvas.draw()
+  #manager.show()
+
+timer = fig.canvas.new_timer(interval=20)
+timer.add_callback(RealtimePloter, ())
+timer2 = fig.canvas.new_timer(interval=20)
+timer2.add_callback(SinwaveformGenerator, ())
+timer.start()
+timer2.start()
+
+pylab.show()

@@ -4,6 +4,9 @@
 #include "i2c.h"
 #include "MPU6500.h"
 #include "uart.h"
+#include "string.h"
+
+#define STRING_LEN 14
 
 #pragma vector=USART0RX_VECTOR
 __interrupt void UartRx()
@@ -75,26 +78,46 @@ void main(void)
         writeBit(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_PWR_MGMT_1, MPU6500_PWR1_SLEEP_BIT, 0);
 
         unsigned char buffer[14];
-
+        
+//        memset(buffer, 0, 14);
         ReadBytes(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_ACCEL_XOUT_H, buffer, 14);
 
         unsigned int ax = (((unsigned int)buffer[0]) << 8) | buffer[1];
         unsigned int ay = (((unsigned int)buffer[2]) << 8) | buffer[3];
         unsigned int az = (((unsigned int)buffer[4]) << 8) | buffer[5];
-        //        unsigned int gx = (((unsigned int)buffer[8]) << 8) | buffer[9];
-        //        unsigned int gy = (((unsigned int)buffer[10]) << 8) | buffer[11];
-        //        unsigned int gz = (((unsigned int)buffer[12]) << 8) | buffer[13];
+        unsigned int gx = (((unsigned int)buffer[8]) << 8) | buffer[9];
+        unsigned int gy = (((unsigned int)buffer[10]) << 8) | buffer[11];
+        unsigned int gz = (((unsigned int)buffer[12]) << 8) | buffer[13];
 
+        unsigned char axs[20];
+        unsigned char ays[20];
+        unsigned char azs[20];
+        unsigned char gxs[20];
+        unsigned char gys[20];
+        unsigned char gzs[20];
 
-        unsigned char axs[10];
-        unsigned char ays[10];
-        unsigned char azs[10];
-        sprintf(axs, "ax: %d\r\n", ax);
-        sprintf(ays, "ay: %d\r\n", ay);
-        sprintf(azs, "az: %d\r\n", az);
-        SendUart(axs, 10);
-        SendUart(ays, 10);
-        SendUart(azs, 10);
+        memset(axs, 0, 20);
+        memset(ays, 0, 20);
+        memset(azs, 0, 20);
+        memset(gxs, 0, 20);
+        memset(gys, 0, 20);
+        memset(gzs, 0, 20);
+
+        sprintf((char*)axs, "ax: %5d\r\n\r\n", ax);
+        sprintf((char*)ays, "ay: %5d\r\n\r\n", ay);
+        sprintf((char*)azs, "az: %5d\r\n\r\n", az);
+        sprintf((char*)gxs, "gx: %5d\r\n\r\n", gx);
+        sprintf((char*)gys, "gy: %5d\r\n\r\n", gy);
+        sprintf((char*)gzs, "gz: %5d\r\n\r\n", gz);
+
+        SendUart("********************\r\n", 22);
+        SendUart(axs, STRING_LEN);
+        SendUart(ays, STRING_LEN);
+        SendUart(azs, STRING_LEN);
+        SendUart(gxs, STRING_LEN);
+        SendUart(gys, STRING_LEN);
+        SendUart(gzs, STRING_LEN);
+        SendUart("********************\r\n", 22);
         // printf("%d\n", gx);
         // printf("%d\n", gy);
         // printf("%d\n", gz);

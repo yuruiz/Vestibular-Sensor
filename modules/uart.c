@@ -4,7 +4,7 @@
 void UartInit()
 {
     USART_SEL |= UTXD0 + URXD0;     //set the pinout as secondary functin
-    UCTL0 = CHAR;    //8 data bits , 1 stop bit , 1 parity bit
+    UCTL0 = CHAR;    //8 data bits , 1 stop bit , No parity bit
     UTCTL0 |= SSEL0;     //setlect UCLK = ACLK
     UBR00 = 0x3;        //set the baud rate 9600 bit/s
     UBR10 = 0;

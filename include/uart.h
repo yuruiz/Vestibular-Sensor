@@ -11,5 +11,5 @@
 
 void UartInit();
 
-void SendUart(unsigned char *pBuffer,unsigned char n_byte);
+void SendUart(unsigned char *pBuffer, unsigned char n_byte);
 #endif
