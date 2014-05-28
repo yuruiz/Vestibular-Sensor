@@ -81,13 +81,13 @@ def main():
 
 
   # plot parameters
-  analogData = AnalogData(100)
-  analogPlot = AnalogPlot(analogData)
+  # analogData = AnalogData(100)
+  # analogPlot = AnalogPlot(analogData)
   data = [0,0,0,0,0,0]
   # print "here"
 
   # open serial port
-  ser = serial.Serial(11, 9600)
+  ser = serial.Serial(13, 9600)
   while True:
     try:
       read_line = ser.readline()
@@ -95,7 +95,7 @@ def main():
       # data = [float(val) for val in line.split()]
       if 'ax' in read_line:
         try:
-            data[0] = int(read_line[5:11].strip(' '))
+            data[0] = int(read_line[4:11].strip(' '))
         except Exception, e:
           print e
       elif 'ay' in read_line:
@@ -123,14 +123,14 @@ def main():
             data[5] = int(read_line[5:11].strip(' '))
         except Exception, e:
           print e
-      #print data
-      analogData.add(data)
-      analogPlot.update(analogData)
+      print data
+      # analogData.add(data)
+      # analogPlot.update(analogData)
     except KeyboardInterrupt:
       print 'exiting'
       break
-    if ser.inWaiting() > 1000:
-      ser.flushInput()
+    # if ser.inWaiting() > 1000:
+    #   ser.flushInput()
   # close serial
   ser.flush()
   ser.close()

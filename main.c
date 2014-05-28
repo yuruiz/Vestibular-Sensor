@@ -6,7 +6,13 @@
 #include "uart.h"
 #include "string.h"
 
-#define STRING_LEN 14
+#define STRING_LEN 15
+
+//#define DEBUG
+#ifndef DEBUG
+#define WORK
+#endif
+
 
 #pragma vector=USART0RX_VECTOR
 __interrupt void UartRx()
@@ -22,16 +28,6 @@ __interrupt void UartTx ()
     //    TxFlag=1;
     __low_power_mode_off_on_exit();
 }
-
-//static void Delay(unsigned int n)
-//{
-//    unsigned int i;
-//
-//    for (i = 0; i < n ; i++)
-//    {
-//        //        _NOP();
-//    }
-//}
 
 //System Initialization
 void InitSys()
@@ -66,8 +62,6 @@ void main(void)
 
     InitSys();
 
-    // P1DIR |= 0x03;                        // Set P1.0 to output direction
-
     if (!MPU_Test_Connection())
     { printf("Connection Error"); }
 
@@ -82,10 +76,21 @@ void main(void)
         memset(buffer, 0, 14);
         ReadBytes(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_ACCEL_XOUT_H, buffer, 14);
 
-        unsigned int ax = (((unsigned int)buffer[0]) << 8) | buffer[1];
-        unsigned int ay = (((unsigned int)buffer[2]) << 8) | buffer[3];
-        unsigned int az = (((unsigned int)buffer[4]) << 8) | buffer[5];
-        unsigned int gx = (((unsigned int)buffer[8]) << 8) | buffer[9];
+#ifdef WORK
+        unsigned char strdata[15];
+//        memset(strdata, 0, 15);
+        memcpy(strdata+1, buffer, 14);
+        strdata[0] = 'S';
+//        sprintf(strdata, "S%s", buffer);
+        SendUart(strdata, STRING_LEN);
+        
+#endif
+        
+#ifdef DEBUG
+        unsigned int ax = (((unsigned int)buffer[0])  << 8) | buffer[1];
+        unsigned int ay = (((unsigned int)buffer[2])  << 8) | buffer[3];
+        unsigned int az = (((unsigned int)buffer[4])  << 8) | buffer[5];
+        unsigned int gx = (((unsigned int)buffer[8])  << 8) | buffer[9];
         unsigned int gy = (((unsigned int)buffer[10]) << 8) | buffer[11];
         unsigned int gz = (((unsigned int)buffer[12]) << 8) | buffer[13];
 
@@ -101,7 +106,7 @@ void main(void)
         memset(azs, 0, 20);
         memset(gxs, 0, 20);
         memset(gys, 0, 20);
-        memset(gzs, 0, 20);
+        memset(gzs, 0, 20);      
 
         sprintf((char*)axs, "ax: %5d\r\n\r\n", ax);
         sprintf((char*)ays, "ay: %5d\r\n\r\n", ay);
@@ -110,6 +115,7 @@ void main(void)
         sprintf((char*)gys, "gy: %5d\r\n\r\n", gy);
         sprintf((char*)gzs, "gz: %5d\r\n\r\n", gz);
 
+        
         SendUart("********************\r\n", 22);
         SendUart(axs, STRING_LEN);
         SendUart(ays, STRING_LEN);
@@ -118,11 +124,6 @@ void main(void)
         SendUart(gys, STRING_LEN);
         SendUart(gzs, STRING_LEN);
         SendUart("********************\r\n", 22);
-        // printf("%d\n", gx);
-        // printf("%d\n", gy);
-        // printf("%d\n", gz);
-
-        // P1OUT ^= 0x03;                      // Toggle P1.0 using exclusive-OR
-        // Delay(1000);
+#endif
     }
 }

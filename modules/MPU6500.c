@@ -10,10 +10,10 @@ unsigned char MPU6500_Init()
     		  MPU6500_CLOCK_PLL_XGYRO);
     // setFullScaleGyroRange
     writeBits(devAddr, MPU6500_RA_GYRO_CONFIG, MPU6500_GCONFIG_FS_SEL_BIT, MPU6500_GCONFIG_FS_SEL_LENGTH,
-              MPU6500_GYRO_FS_250);
+              MPU6500_GYRO_FS_1000);
     // setFullScaleAccelRange
     writeBits(devAddr, MPU6500_RA_ACCEL_CONFIG, MPU6500_ACONFIG_AFS_SEL_BIT, MPU6500_ACONFIG_AFS_SEL_LENGTH,
-              MPU6500_ACCEL_FS_2);
+              MPU6500_ACCEL_FS_8);
     // setSleepEnabled
     writeBit(devAddr, MPU6500_RA_PWR_MGMT_1, MPU6500_PWR1_SLEEP_BIT, 0);
     // Enable DMP

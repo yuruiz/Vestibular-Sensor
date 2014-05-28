@@ -2,9 +2,11 @@ ST3/
 Debug/
 examples/
 settings/
+Sample Data/
 *.eww
 *.dep
 *.ewd
 *.ewp
+*.dmp
 path.txt
 .DS_store
