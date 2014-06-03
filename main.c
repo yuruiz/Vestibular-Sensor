@@ -6,7 +6,7 @@
 #include "uart.h"
 #include "string.h"
 
-#define STRING_LEN 15
+#define STRING_LEN 16
 
 //#define DEBUG
 #ifndef DEBUG
@@ -29,22 +29,32 @@ __interrupt void UartTx ()
     __low_power_mode_off_on_exit();
 }
 
+static void Delay(unsigned int n)
+{
+    unsigned int i;
+
+    for (i = 0; i < n ; i++)
+    {
+//        _NOP();
+    }
+}
+
 //System Initialization
 void InitSys()
 {
     //use XT2 Oscillator
-    // BCSCTL1 &= ~XT2OFF; //open XT2 Oscillator
-
-    // do
-    // {
-    //     IFG1 &= ~OFIFG; //clear Oscillator flags
-
-    //     unsigned int iq0;
-    //     for (iq0 = 0xFF; iq0 > 0; iq0--); //delay, wait Oscillator to work
-    // }
-    // while ((IFG1 & OFIFG) != 0); //test if XT2 works
-
-    // BCSCTL2 = SELM_2 + SELS; //select XT2 for MCLK¡¢SMCLK
+//     BCSCTL1 &= ~XT2OFF; //open XT2 Oscillator
+//
+//     do
+//     {
+//         IFG1 &= ~OFIFG; //clear Oscillator flags
+//
+//         unsigned int iq0;
+//         for (iq0 = 0xFF; iq0 > 0; iq0--); //delay, wait Oscillator to work
+//     }
+//     while ((IFG1 & OFIFG) != 0); //test if XT2 works
+//
+//     BCSCTL2 = SELM_2 + SELS; //select XT2 for MCLK¡¢SMCLK
 
     //Other peripheral initialization
     InitIIC();
@@ -77,13 +87,13 @@ void main(void)
         ReadBytes(MPU6500_DEFAULT_ADDRESS, MPU6500_RA_ACCEL_XOUT_H, buffer, 14);
 
 #ifdef WORK
-        unsigned char strdata[15];
+        unsigned char strdata[16];
+        strdata[0] = 'S';
+        strdata[15] = 'E';
 //        memset(strdata, 0, 15);
         memcpy(strdata+1, buffer, 14);
-        strdata[0] = 'S';
-//        sprintf(strdata, "S%s", buffer);
         SendUart(strdata, STRING_LEN);
-        
+//        Delay(1000);
 #endif
         
 #ifdef DEBUG

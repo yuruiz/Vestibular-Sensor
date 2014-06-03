@@ -3,6 +3,8 @@ Debug/
 examples/
 settings/
 Sample Data/
+I2Cdev/
+MPU6050/
 *.eww
 *.dep
 *.ewd

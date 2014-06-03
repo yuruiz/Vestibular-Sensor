@@ -5,7 +5,7 @@
 //P3.1  SDA
 #define TestACK if(ReceiveAck()){return 1;}
 
-#define DELAY_CONSTANT 50
+#define DELAY_CONSTANT 1
 unsigned int a[50];
 
 static void Delay(unsigned int n)
