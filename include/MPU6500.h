@@ -401,4 +401,6 @@ unsigned char MPU6500_Init();
 
 unsigned char MPU_Test_Connection();
 
+unsigned char FIFO_Enable();
+
 #endif /* _MPU6500_H_ */

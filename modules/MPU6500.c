@@ -1,6 +1,6 @@
 #include "MPU6500.h"
 #include "i2c.h"
-
+#include "config.h"
 
 unsigned char MPU6500_Init()
 {
@@ -19,6 +19,10 @@ unsigned char MPU6500_Init()
     // Enable DMP
     writeBit(devAddr, MPU6500_RA_USER_CTRL, MPU6500_USERCTRL_DMP_EN_BIT, 1);
 
+#ifdef FIFO
+    FIFO_Enable();
+#endif
+
     return 0;
 }
 
@@ -31,4 +35,16 @@ unsigned char MPU_Test_Connection()
 		return 1;
 	}
     return 0;
+}
+
+unsigned char FIFO_Enable()
+{
+    unsigned char devAddr = MPU6500_DEFAULT_ADDRESS;
+
+    writeBit(devAddr, MPU6500_RA_FIFO_EN, MPU6500_XG_FIFO_EN_BIT, 1);
+    writeBit(devAddr, MPU6500_RA_FIFO_EN, MPU6500_YG_FIFO_EN_BIT, 1);
+    writeBit(devAddr, MPU6500_RA_FIFO_EN, MPU6500_ZG_FIFO_EN_BIT, 1);
+    writeBit(devAddr, MPU6500_RA_FIFO_EN, MPU6500_ACCEL_FIFO_EN_BIT, 1);
+
+    return 1;
 }
