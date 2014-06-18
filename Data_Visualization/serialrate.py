@@ -1,7 +1,7 @@
 import serial, time
 
 def main():
-	ser = serial.Serial(10, 115200)
+	ser = serial.Serial(12, 115200)
 	start = time.time()
 	now = start
 	count = 0
