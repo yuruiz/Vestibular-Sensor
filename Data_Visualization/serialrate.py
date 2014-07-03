@@ -1,7 +1,8 @@
 import serial, time
+import data_record
 
 def main():
-	ser = serial.Serial(12, 115200)
+	ser = serial.Serial(data_record.portNum_1, data_record.baudrate)
 	start = time.time()
 	now = start
 	count = 0
