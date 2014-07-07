@@ -1,1 +1,6 @@
-xgatt_data 8
+xgatt_write 8
+xgatt_who 11
+xgatt_pwr1 15
+xgatt_pwr2 19
+xgatt_ratediv 23
+xgatt_sensor 27

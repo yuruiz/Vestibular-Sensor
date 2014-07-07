@@ -1,4 +1,4 @@
-52
+36
 0:0	GAP_AD_FLAG_BREDR_NOT_SUPPORTED
 0:0	GAP_AD_FLAG_GENERAL_DISCOVERABLE
 0:0	GAP_AD_FLAG_LIMITED_DISCOVERABLE
@@ -76,9 +76,16 @@
 0:0	system_endpoint_uart0
 0:0	system_endpoint_uart1
 0:0	system_endpoint_usb
-0:0	xgatt_data
-0:4	result
-4:20	in
-24:4	in_len
-28:20	out
-48:4	out_len
+0:0	xgatt_pwr1
+0:0	xgatt_pwr2
+0:0	xgatt_ratediv
+0:0	xgatt_sensor
+0:0	xgatt_who
+0:0	xgatt_write
+0:4	written
+4:4	result
+8:4	port
+12:4	data
+16:4	data_len
+20:4	connected
+24:12	sensor

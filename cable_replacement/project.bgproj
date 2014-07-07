@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project>
-    <gatt in="gatt.xml" />
+    <gatt in="gatt_mpu.xml" />
     <device type="ble113" />
     <hardware in="hardware.xml" />
-    <script in="script.bgs" />
+    <script in="mpu6500.bgs" />
     <usb_main in="cdc.xml" />
     <image out="out.hex" />
 </project>
+
